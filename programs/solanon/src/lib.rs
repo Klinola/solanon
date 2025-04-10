@@ -1,16 +1,21 @@
 use anchor_lang::prelude::*;
 
-declare_id!("EYutos9XnBjwzGUs1rz1s29f1AUwcEDWq3eaJm43pEex");
+pub mod instructions;
+pub mod state;
+pub mod utils;
+mod program_id;
+
+declare_id!(program_id::PROGRAM_ID);
 
 #[program]
 pub mod solanon {
     use super::*;
-
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        msg!("Greetings from: {:?}", ctx.program_id);
-        Ok(())
+    
+    pub fn deposit(ctx: Context<instructions::Deposit>, amount: u64, secret: [u8; 32]) -> Result<()> {
+        instructions::deposit(ctx, amount, secret)
+    }
+    
+    pub fn withdraw(ctx: Context<instructions::Withdraw>, nullifier: [u8; 32], proof: Vec<u8>) -> Result<()> {
+        instructions::withdraw(ctx, nullifier, proof)
     }
 }
-
-#[derive(Accounts)]
-pub struct Initialize {}
